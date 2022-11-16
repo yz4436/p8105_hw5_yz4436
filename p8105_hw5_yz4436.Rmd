@@ -109,3 +109,21 @@ number_df =
 
 ```
 
+For the city of Baltimore, MD, I create a function called prop_tests with prop.test to estimate the proportion of homicides that are unsolved; save the output of prop.test as an R object.
+
+```{r}
+baltimore = 
+  number_df %>%
+  filter(city_state == "Baltimore,MD")
+
+
+prop_tests = function(city) {
+  prop.test(city$unsolved_homicide, city$total_homicide, conf.level = 0.95) %>%
+    broom::tidy()
+}
+prop_tests(baltimore) %>%
+  select(estimate, conf.low, conf.high)
+
+```
+
+* For the city of Baltimore, MD, after applying the broom::tidy to this object, we could find that the proportion of homicides that are unsolved is about `r prop_tests(baltimore)$estimate`, and the 95% confidence intervals is (`r prop_tests(baltimore)$conf.low`, `r prop_tests(baltimore)$conf.high`).
