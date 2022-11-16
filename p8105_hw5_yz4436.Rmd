@@ -141,3 +141,17 @@ all_cities =
   select(city_state, estimate, conf.low, conf.high)
 ```
 
+I create a plot that shows the estimates and CIs for each city.
+
+```{r}
+all_cities %>% 
+  ggplot(aes(fct_reorder(city_state, estimate), estimate)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) + 
+  labs(
+    title = "Estimates and 95% CIs of estimates for each city of 50 large U.S. cities",
+    x = "City, State", y = "Estimates"
+  )
+```
+
