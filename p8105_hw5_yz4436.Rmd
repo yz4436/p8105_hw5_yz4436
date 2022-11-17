@@ -193,3 +193,30 @@ sim_results_df =
   unnest(estimate_df) %>%
   select(mu, iter, estimate, p.value)
 ```
+
+
+Make a plot showing the proportion of times the null was rejected (the power of the test) on the y axis and the true value of μ on the x axis. 
+
+```{r}
+sim_results_df %>%
+  mutate(
+    rejected = ifelse(p.value < 0.05, 1, 0)
+  ) %>%
+  group_by(mu) %>%
+  summarize(
+    prop = sum(rejected) / 5000
+  ) %>%
+  ggplot(aes(x = mu, y = prop)) + 
+  geom_point() +
+  geom_line() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) + 
+  labs(
+    title = "Proportion of times the null was rejected for different mu",
+    x = "mu",
+    y = "Rejected proportion"
+  )
+```
+
+Describe the association between effect size and power.
+* According to the plot, we could see that as the true mu increases, proportion of times the null was rejected also increases. From the trend of the plot, we could also find that the rejected proportion increased very fast in the beginning part, then change slower and approach to 1 finally. We could say the larger effect size, the larger power.
+
