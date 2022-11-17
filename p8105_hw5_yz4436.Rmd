@@ -220,3 +220,46 @@ sim_results_df %>%
 Describe the association between effect size and power.
 * According to the plot, we could see that as the true mu increases, proportion of times the null was rejected also increases. From the trend of the plot, we could also find that the rejected proportion increased very fast in the beginning part, then change slower and approach to 1 finally. We could say the larger effect size, the larger power.
 
+Make a plot showing the average estimate of μ̂  on the y axis and the true value of μ on the x axis. 
+
+```{r}
+sim_results_df %>%
+  group_by(mu) %>%
+  summarize(
+    avg_est = mean(estimate)
+  ) %>%
+  ggplot(aes(x = mu, y = avg_est)) + 
+  geom_point() +
+  geom_line() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) + 
+  labs(
+    title = "The average estimate of mu for different mu",
+    x = "mu",
+    y = "Average estimate"
+  )
+```
+
+Make a second plot (or overlay on the first) the average estimate of μ̂  only in samples for which the null was rejected on the y axis and the true value of μ on the x axis. 
+  
+```{r}
+sim_results_df %>%
+  mutate(
+    rejected = ifelse(p.value < 0.05, 1, 0)
+  ) %>%
+  filter(rejected == 1) %>%
+  group_by(mu) %>%
+  summarize(
+    avg_est = mean(estimate)
+  ) %>%
+  ggplot(aes(x = mu, y = avg_est)) + 
+  geom_point() +
+  geom_line() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) + 
+  labs(
+    title = "The average estimate of mu for different mu",
+    x = "mu",
+    y = "Average estimate for the null was rejected"
+  )
+```
+
+* According to two plots, we could see that when y axis is the average estimate of μ, the plot is almost a straight line as true mu increase, average estimate of μ also increase also the same value, but the second plot is not a perfect straight line. When the true mu is small, the average estimate of μ̂  only in samples for which the null was rejected is a little bit larger than the true mean since at this time, the porportion of rejecting the null could not reflect the true mean than that of the larger effect size, but when the true mean increase and become larger, they are almost same. 
